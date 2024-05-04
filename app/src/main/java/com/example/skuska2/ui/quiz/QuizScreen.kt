@@ -38,6 +38,7 @@ import com.example.skuska2.Screen
 import com.example.skuska2.domain.model.Constants
 import com.example.skuska2.domain.model.Question
 import com.example.skuska2.domain.model.setData
+import com.example.skuska2.ui.components.AlertDialog
 import com.example.skuska2.ui.components.AnswerButton
 import com.example.skuska2.ui.theme.md_theme_light_onPrimaryContainer
 import com.example.skuska2.ui.theme.md_theme_light_primary
@@ -127,6 +128,9 @@ fun QuizScreen(navController: NavController, idOfEngine: Int) {
                                 color = Color.White,
                             )
                         }
+                        if (viewModel.openDialog) {
+                            AlertDialog(onDismiss = {viewModel.onDismissAlertDialog()}, message = "You have not selected the option", buttonText = "Select option")
+                        }
                     }
                 }
             }
@@ -200,9 +204,9 @@ fun QuizScreen(navController: NavController, idOfEngine: Int) {
                     }
                 }
 
-                if(viewModel.getNumberOfQuestion1() < viewModel.getRightQuestions(idOfEngine ?: 1).size-1){
+                if(viewModel.getNumberOfQuestion1() < viewModel.getRightQuestions(idOfEngine).size-1){
                     Button(
-                        onClick = { viewModel.nextQuestionButton(idOfEngine ?: 1) },
+                        onClick = { viewModel.nextQuestionButton(idOfEngine) },
                         modifier = Modifier.padding(15.dp),
                         shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 10.dp, bottomStart = 10.dp, topEnd = 10.dp),
                         elevation = ButtonDefaults.buttonElevation(
@@ -219,9 +223,9 @@ fun QuizScreen(navController: NavController, idOfEngine: Int) {
                             color = Color.White
                         )
                     }
-                } else if(viewModel.getNumberOfQuestion1() == viewModel.getRightQuestions(idOfEngine ?: 1).size-1) {
+                } else if(viewModel.getNumberOfQuestion1() == viewModel.getRightQuestions(idOfEngine).size-1) {
                     Button(
-                        onClick = {if(viewModel.getClickedOption1())navController.navigate(route = Screen.ResultScreen.passIdScoreNumbQuest(id = idOfEngine ?: 1, score = viewModel.getScore1(), numbQuest = if(idOfEngine != null)viewModel.getRightQuestions(idOfEngine.toInt()).size else(0)))},
+                        onClick = {if(viewModel.getClickedOption1())navController.navigate(route = Screen.ResultScreen.passIdScoreNumbQuest(id = idOfEngine ?: 1, score = viewModel.getScore1(), numbQuest = viewModel.getRightQuestions(idOfEngine).size))},
                         modifier = Modifier.padding(15.dp),
                         shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 10.dp, bottomStart = 10.dp, topEnd = 10.dp),
                         elevation = ButtonDefaults.buttonElevation(

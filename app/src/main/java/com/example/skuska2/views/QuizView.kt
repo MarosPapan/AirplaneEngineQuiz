@@ -17,6 +17,7 @@ class QuizView: ViewModel() {
     private var numberOfQuestion by mutableIntStateOf(0)
     private var clickedOption by mutableStateOf(false)
     private var score by mutableIntStateOf(0)
+    var openDialog by mutableStateOf(false)
 
     var backgroundColorOFAnswer1 by mutableStateOf(Color.Blue)
         private set
@@ -30,14 +31,6 @@ class QuizView: ViewModel() {
 
     fun getNumberOfQuestion1(): Int{
         return numberOfQuestion
-    }
-
-    fun changeBackgroundColor(userSelection: Int, rightOption: Int){
-        if (userSelection == rightOption){
-            backgroundColorOFAnswer1 = Color.Green
-        }else{
-            backgroundColorOFAnswer1 = Color.Red
-        }
     }
 
     fun getRightQuestions(id: Int): List<Question>{
@@ -114,6 +107,8 @@ class QuizView: ViewModel() {
             backgroundColorOFAnswer2 = Color.Blue
             backgroundColorOFAnswer3 = Color.Blue
             clickedOption = false
+        }else{
+            onOpenAlertDialog()
         }
 
     }
@@ -123,6 +118,14 @@ class QuizView: ViewModel() {
     }
     fun getClickedOption1(): Boolean {
         return clickedOption
+    }
+
+    fun onDismissAlertDialog() {
+        openDialog = false
+    }
+
+    fun onOpenAlertDialog() {
+        openDialog = true
     }
 
 }
