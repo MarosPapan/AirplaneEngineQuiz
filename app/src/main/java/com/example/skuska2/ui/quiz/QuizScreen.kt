@@ -50,7 +50,7 @@ import com.example.skuska2.views.QuizView
 
 
 @Composable
-fun QuizScreen(navController: NavController, idOfEngine: Int) {
+fun QuizScreen(navController: NavController, typeOfEngine: String) {
     val viewModel = viewModel<QuizView>()
     Scaffold(
         topBar ={ }
@@ -77,8 +77,8 @@ fun QuizScreen(navController: NavController, idOfEngine: Int) {
 
                     ) {
                         Image(
-                            painter = painterResource(id = setData.getOneEngine(idOfEngine).image),
-                            contentDescription = setData.getOneEngine(idOfEngine).typeOfEngine,
+                            painter = painterResource(id = viewModel.getImageByName(typeOfEngine)),
+                            contentDescription = viewModel.getEngineByName(typeOfEngine)?.typeOfEngine,
                             modifier = Modifier
                                 .size(120.dp)
                                 .padding(10.dp)
@@ -89,7 +89,7 @@ fun QuizScreen(navController: NavController, idOfEngine: Int) {
                         ) {
                             Text(
                                 modifier = Modifier.padding(bottom = 10.dp),
-                                text = setData.getOneEngine(idOfEngine).typeOfEngine + " Quiz",
+                                text = viewModel.getEngineByName(typeOfEngine)?.typeOfEngine + " Quiz",
                                 style = MaterialTheme.typography.headlineLarge,
                                 color = Color.White,
                             )
@@ -123,7 +123,7 @@ fun QuizScreen(navController: NavController, idOfEngine: Int) {
                             )
                             Text(
                                 modifier = Modifier.padding(bottom = 10.dp),
-                                text = viewModel.getScore1().toString() + " / " + viewModel.getRightQuestions(idOfEngine).size.toString(),
+                                text = viewModel.getScore1().toString() + " / " + viewModel.getSizeOfQuiz(typeOfEngine = typeOfEngine),
                                 style = MaterialTheme.typography.headlineLarge,
                                 color = Color.White,
                             )
@@ -154,49 +154,50 @@ fun QuizScreen(navController: NavController, idOfEngine: Int) {
                             color = Color.White,
                             style = MaterialTheme.typography.headlineSmall
                         )
+                        //Displaying questions
                         Text(
                             modifier = Modifier.padding(15.dp),
-                            text = viewModel.getRightQuestions(idOfEngine).get(viewModel.getNumberOfQuestion1()).question,
+                            text = viewModel.getQuestionsByName(typeOfEngine).questions.get(viewModel.getNumberOfQuestion1()).question,
                             color = Color.White
                         )
                         AnswerButton(
                             colorOFButton = viewModel.backgroundColorOFAnswer1,
-                            answerText = viewModel.getRightQuestions(idOfEngine).get(viewModel.getNumberOfQuestion1()).optionOne,
+                            answerText = viewModel.getQuestionsByName(typeOfEngine).questions.get(viewModel.getNumberOfQuestion1()).optionOne,
                             numberOfAnswer = 1,
                             modifier = Modifier
                                 .padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
                             onClickFunction = {
                                 viewModel.changeBackgroundColor1(
                                     1,
-                                    viewModel.getRightQuestions(idOfEngine).get(viewModel.getNumberOfQuestion1()).correctAnswer
+                                    viewModel.getQuestionsByName(typeOfEngine).questions.get(viewModel.getNumberOfQuestion1()).correctAnswer
                                 )
                             }
                         )
 
                         AnswerButton(
                             colorOFButton = viewModel.backgroundColorOFAnswer2,
-                            answerText = viewModel.getRightQuestions(idOfEngine).get(viewModel.getNumberOfQuestion1()).optionTwo,
+                            answerText = viewModel.getQuestionsByName(typeOfEngine).questions.get(viewModel.getNumberOfQuestion1()).optionTwo,
                             numberOfAnswer = 2,
                             modifier = Modifier
                                 .padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
                             onClickFunction = {
                                 viewModel.changeBackgroundColor1(
                                     2,
-                                    viewModel.getRightQuestions(idOfEngine).get(viewModel.getNumberOfQuestion1()).correctAnswer
+                                    viewModel.getQuestionsByName(typeOfEngine).questions.get(viewModel.getNumberOfQuestion1()).correctAnswer
                                 )
                             }
                         )
 
                         AnswerButton(
                             colorOFButton = viewModel.backgroundColorOFAnswer3,
-                            answerText = viewModel.getRightQuestions(idOfEngine).get(viewModel.getNumberOfQuestion1()).optionThree,
+                            answerText = viewModel.getQuestionsByName(typeOfEngine).questions.get(viewModel.getNumberOfQuestion1()).optionThree,
                             numberOfAnswer = 3,
                             modifier = Modifier
                                 .padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
                             onClickFunction = {
                                 viewModel.changeBackgroundColor1(
                                     3,
-                                    viewModel.getRightQuestions(idOfEngine).get(viewModel.getNumberOfQuestion1()).correctAnswer
+                                    viewModel.getQuestionsByName(typeOfEngine).questions.get(viewModel.getNumberOfQuestion1()).correctAnswer
                                 )
                             }
 
@@ -204,9 +205,9 @@ fun QuizScreen(navController: NavController, idOfEngine: Int) {
                     }
                 }
 
-                if(viewModel.getNumberOfQuestion1() < viewModel.getRightQuestions(idOfEngine).size-1){
+                if(viewModel.getNumberOfQuestion1() < viewModel.getSizeOfQuiz(typeOfEngine = typeOfEngine)-1){
                     Button(
-                        onClick = { viewModel.nextQuestionButton(idOfEngine) },
+                        onClick = { viewModel.nextQuestionButton() },
                         modifier = Modifier.padding(15.dp),
                         shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 10.dp, bottomStart = 10.dp, topEnd = 10.dp),
                         elevation = ButtonDefaults.buttonElevation(
@@ -223,9 +224,9 @@ fun QuizScreen(navController: NavController, idOfEngine: Int) {
                             color = Color.White
                         )
                     }
-                } else if(viewModel.getNumberOfQuestion1() == viewModel.getRightQuestions(idOfEngine).size-1) {
+                } else if(viewModel.getNumberOfQuestion1() == viewModel.getSizeOfQuiz(typeOfEngine = typeOfEngine)-1) {
                     Button(
-                        onClick = {if(viewModel.getClickedOption1())navController.navigate(route = Screen.ResultScreen.passIdScoreNumbQuest(id = idOfEngine ?: 1, score = viewModel.getScore1(), numbQuest = viewModel.getRightQuestions(idOfEngine).size))},
+                        onClick = {if(viewModel.getClickedOption1())navController.navigate(route = Screen.ResultScreen.passIdScoreNumbQuest(typeOfEngine = typeOfEngine, score = viewModel.getScore1(), numbQuest = viewModel.getSizeOfQuiz(typeOfEngine)))},
                         modifier = Modifier.padding(15.dp),
                         shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 10.dp, bottomStart = 10.dp, topEnd = 10.dp),
                         elevation = ButtonDefaults.buttonElevation(
@@ -253,5 +254,5 @@ fun QuizScreen(navController: NavController, idOfEngine: Int) {
 fun QuizScreenPreview(){
     setData.SetEnginesData()
     Constants.getTurboJetQuestions()
-    QuizScreen(navController = rememberNavController(), 2)
+    QuizScreen(navController = rememberNavController(), "TurboProp")
 }

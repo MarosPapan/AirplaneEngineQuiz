@@ -8,11 +8,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.skuska2.MyApp
+import com.example.skuska2.R
 import com.example.skuska2.domain.model.Constants
 import com.example.skuska2.domain.model.Question
+import com.example.skuska2.models.Engine
+import com.example.skuska2.models.Quiz
 import com.example.skuska2.ui.results.ResultScreen
+import io.realm.kotlin.ext.query
 
 class QuizView: ViewModel() {
+
+    private val realm = MyApp.realm
 
     private var numberOfQuestion by mutableIntStateOf(0)
     private var clickedOption by mutableStateOf(false)
@@ -33,15 +40,43 @@ class QuizView: ViewModel() {
         return numberOfQuestion
     }
 
-    fun getRightQuestions(id: Int): List<Question>{
-        var mQuestionList: List<Question> = emptyList()
-        when(id){
-            1 -> {mQuestionList = Constants.getTurboPropQuestions()}
-            2 -> {mQuestionList = Constants.getTurboFunQuestions()}
-            3 -> {mQuestionList = Constants.getTurboJetQuestions()}
-            4 -> {mQuestionList = Constants.getTurboshaftQuestions()}
+//    fun getRightQuestions(id: Int): List<Question>{
+//        var mQuestionList: List<Question> = emptyList()
+//        when(id){
+//            1 -> {mQuestionList = Constants.getTurboPropQuestions()}
+//            2 -> {mQuestionList = Constants.getTurboFunQuestions()}
+//            3 -> {mQuestionList = Constants.getTurboJetQuestions()}
+//            4 -> {mQuestionList = Constants.getTurboshaftQuestions()}
+//        }
+//        return mQuestionList
+//    }
+
+    fun getEngineByName(name: String): Engine?{
+        var engine: Engine?
+        engine = realm.query<Engine>(query = "typeOfEngine CONTAINS[c] $0", name).first().find()
+        println(engine?.typeOfEngine)
+        return  engine
+    }
+
+    fun getImageByName(name: String): Int{
+        return getEngineByName(name)?.image?.toInt() ?: R.drawable.propeller
+    }
+
+    fun getQuestionsByName(typeOfEngine: String): Quiz {
+        var engine = getEngineByName(typeOfEngine)
+        var quiz: Quiz?
+        quiz = realm.query<Quiz>(query = "quizOfEngine.id == $0", engine?.id).first().find()
+        if (quiz != null) {
+            println("Up until now working: " + typeOfEngine + quiz.questions.get(1).question)
+            return quiz
+        }else{
+            print("Went to else")
+            return Quiz()
         }
-        return mQuestionList
+    }
+
+    fun getSizeOfQuiz(typeOfEngine: String): Int {
+        return getQuestionsByName(typeOfEngine)?.questions?.size ?: 0
     }
 
     fun changeBackgroundColor1(userSelection: Int, rightOption: Int){
@@ -100,7 +135,7 @@ class QuizView: ViewModel() {
         numberOfQuestion = number
     }
 
-    fun nextQuestionButton(idOfEngine: Int) {
+    fun nextQuestionButton() {
         if(clickedOption == true){
             setNumberOfQuestion1(getNumberOfQuestion1()+1)
             backgroundColorOFAnswer1 = Color.Blue
@@ -127,5 +162,4 @@ class QuizView: ViewModel() {
     fun onOpenAlertDialog() {
         openDialog = true
     }
-
 }

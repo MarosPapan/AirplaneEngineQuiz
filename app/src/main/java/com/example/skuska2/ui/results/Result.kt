@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.skuska2.R
@@ -37,9 +38,12 @@ import com.example.skuska2.domain.model.Constants
 import com.example.skuska2.domain.model.setData
 import com.example.skuska2.ui.theme.md_theme_light_onPrimaryContainer
 import com.example.skuska2.ui.theme.md_theme_light_primary
+import com.example.skuska2.views.DetailView
+import com.example.skuska2.views.ResultView
 
 @Composable
-fun ResultScreen(navController: NavController, id: Int, score: Int, numberofQuestions: Int, modifier: Modifier = Modifier){
+fun ResultScreen(navController: NavController, typeOfEngine: String, score: Int, numberofQuestions: Int, modifier: Modifier = Modifier){
+    val viewModel = viewModel<ResultView>()
     Scaffold(
         topBar ={ DetailScreenTopBar() }
     ) { paddingValues ->
@@ -61,21 +65,19 @@ fun ResultScreen(navController: NavController, id: Int, score: Int, numberofQues
                         horizontalAlignment = Alignment.CenterHorizontally
 
                     ) {
-                        if (id != null) {
-                            Image(
-                                painter = painterResource(id = setData.getOneEngine(id).image),
-                                contentDescription = setData.getOneEngine(id).typeOfEngine,
-                                modifier = Modifier
-                                    .size(120.dp)
-                                    .padding(10.dp)
-                            )
-                        }
+                        Image(
+                            painter = painterResource(id = viewModel.getImageByName(typeOfEngine)),
+                            contentDescription = typeOfEngine,
+                            modifier = Modifier
+                                .size(120.dp)
+                                .padding(10.dp)
+                        )
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
                                 modifier = Modifier.padding(0.dp),
-                                text = if (id != null) setData.getOneEngine(id).typeOfEngine else "Engine not found",
+                                text = typeOfEngine,
                                 style = MaterialTheme.typography.headlineLarge,
                                 color = Color.White,
                             )
@@ -160,7 +162,7 @@ fun ResultScreen(navController: NavController, id: Int, score: Int, numberofQues
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Button(
-                        onClick = { navController.navigate(Screen.QuizScreen.route + "/" + id) },
+                        onClick = { navController.navigate(Screen.QuizScreen.route + "/" + typeOfEngine) },
                         shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 20.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = md_theme_light_onPrimaryContainer
@@ -222,5 +224,5 @@ private fun DetailScreenTopBar() {
 @Composable
 fun ResultScreenPreview(){
     setData.SetEnginesData()
-    ResultScreen(navController = rememberNavController(), 1, score = 3, numberofQuestions = 5)
+    ResultScreen(navController = rememberNavController(), "TurboProp", score = 3, numberofQuestions = 5)
 }

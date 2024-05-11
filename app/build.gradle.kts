@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
+    id("io.realm.kotlin")
+    id("kotlin-kapt")
 }
 
 android {
@@ -88,10 +90,11 @@ dependencies {
     ksp("io.github.raamcosta.compose-destinations:ksp:$destinationVersion")
 
     // Room
-    val roomVersion = "2.5.2"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    ksp("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
+//    val roomVersion = "2.5.2"
+//    implementation("androidx.room:room-runtime:$roomVersion")
+//    ksp("androidx.room:room-compiler:$roomVersion")
+//    implementation("androidx.room:room-ktx:$roomVersion")
+    //kapt "androidx.room:room-compiler:$roomVersion"
 
     //Dagger-Hilt
     implementation("com.google.dagger:hilt-android:2.48")
@@ -107,4 +110,7 @@ dependencies {
 
     //Desugaring
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+
+    implementation("io.realm.kotlin:library-base:1.11.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }

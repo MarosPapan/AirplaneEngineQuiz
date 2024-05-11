@@ -16,6 +16,8 @@ import com.example.skuska2.ui.detail.DetailScreen
 import com.example.skuska2.ui.quiz.QuizScreen
 import com.example.skuska2.ui.results.ResultScreen
 import com.example.skuska2.views.WelcomeView
+import org.mongodb.kbson.BsonObjectId
+import org.mongodb.kbson.ObjectId
 
 @Composable
 fun Navigation(){
@@ -37,36 +39,35 @@ fun Navigation(){
            CategoriesScreen(navController = navController, name = name)
        }
         composable(
-            route = Screen.DetailScreen.route + "/{id}",
+            route = Screen.DetailScreen.route + "/{typeOfEngine}",
             arguments = listOf(
-                navArgument("id"){
-                    type = NavType.IntType
+                navArgument("typeOfEngine"){
+                    type = NavType.StringType
                 }
             )
         ) { entry ->
-            val id = entry.arguments?.getInt("id").toString()
-
-            DetailScreen(navController = navController, id = id.toInt())
+            val typeOfEngine = entry.arguments?.getString("typeOfEngine").toString()
+            DetailScreen(navController = navController, typeOfEngine = typeOfEngine)
         }
 
         composable(
-            route = Screen.QuizScreen.route + "/{id}",
+            route = Screen.QuizScreen.route + "/{typeOfEngine}",
             arguments = listOf(
-                navArgument("id"){
-                    type = NavType.IntType
+                navArgument("typeOfEngine"){
+                    type = NavType.StringType
                 }
             )
         ) { entry ->
-            val id = entry.arguments?.getInt("id").toString()
+            val typeOfEngine = entry.arguments?.getString("typeOfEngine").toString()
 
-            QuizScreen(navController = navController, idOfEngine = id.toInt())
+            QuizScreen(navController = navController, typeOfEngine = typeOfEngine)
         }
 
         composable(
             route = Screen.ResultScreen.route,
             arguments = listOf(
-                navArgument(ENGINE_ARGUMENT_KEY){
-                    type = NavType.IntType
+                navArgument(TYPE_OF_ENGINE){
+                    type = NavType.StringType
                 },
                 navArgument(SCORE_ARGUMENT_KEY){
                     type = NavType.IntType
@@ -76,11 +77,11 @@ fun Navigation(){
                 }
             )
         ) { entry ->
-            val id = entry.arguments?.getInt(ENGINE_ARGUMENT_KEY).toString()
+            val typeOfEngine = entry.arguments?.getString(TYPE_OF_ENGINE).toString()
             val score = entry.arguments?.getInt(SCORE_ARGUMENT_KEY).toString()
             val numberOfQuestions = entry.arguments?.getInt(NUMBER_OF_QUESTIONS).toString()
 
-            ResultScreen(navController = navController, id = id.toInt(), score = score.toInt(), numberofQuestions = numberOfQuestions.toInt())
+            ResultScreen(navController = navController, typeOfEngine = typeOfEngine, score = score.toInt(), numberofQuestions = numberOfQuestions.toInt())
         }
 
     }

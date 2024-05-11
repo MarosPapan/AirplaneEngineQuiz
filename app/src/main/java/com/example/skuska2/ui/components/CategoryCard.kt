@@ -24,23 +24,23 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.skuska2.R
 import com.example.skuska2.Screen
+import com.example.skuska2.models.Engine
 import com.example.skuska2.ui.WelcomeScreen
 import com.example.skuska2.ui.theme.md_theme_light_onPrimaryContainer
+import org.mongodb.kbson.ObjectId
 
 
 @Composable
 fun CategoryCard(
     navController: NavController,
     modifier: Modifier = Modifier,
-    categoryName: String,
-    categoryImage: Int,
-    categoryID: Int,
-    onClick: () -> Unit
+    category: Engine,
+    onClickFunction: () -> Unit
 ) {
     ElevatedCard(
         modifier = modifier
             .padding(15.dp)
-            .clickable { navController.navigate(Screen.DetailScreen.route + "/" + categoryID) },
+            .clickable { navController.navigate(Screen.DetailScreen.route + "/" + category.typeOfEngine) },
     ) {
         Row(
             modifier = Modifier
@@ -50,8 +50,8 @@ fun CategoryCard(
         ) {
 
                 Image(
-                    painter = painterResource(categoryImage),
-                    contentDescription = categoryName,
+                    painter = painterResource(category.image),
+                    contentDescription = category.typeOfEngine,
                     modifier = Modifier
                         .size(120.dp)
                         .padding(10.dp)
@@ -59,13 +59,19 @@ fun CategoryCard(
             Column {
                 Text(
                     modifier = Modifier.padding(5.dp),
-                    text = categoryName,
+                    text = category.typeOfEngine,
                     style = MaterialTheme.typography.headlineLarge,
                     color = Color.White
                 )
                 Text(
                     modifier = Modifier.padding(5.dp),
                     text = "Discover more +",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White
+                )
+                Text(
+                    modifier = Modifier.padding(5.dp),
+                    text = category.id.toString(),
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.White
                 )
@@ -80,5 +86,5 @@ fun CategoryCard(
 @Preview
 @Composable
 fun CategoryCardPreview(){
-    CategoryCard(navController = rememberNavController(), categoryName = "TurboProp", categoryImage = R.drawable.propeller, categoryID = 1, onClick = {})
+    CategoryCard(navController = rememberNavController(), category = Engine(), onClickFunction = {})
 }
