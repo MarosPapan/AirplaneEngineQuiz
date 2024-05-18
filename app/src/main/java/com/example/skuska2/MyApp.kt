@@ -1,6 +1,7 @@
 package com.example.skuska2
 
 import android.app.Application
+import com.example.skuska2.domain.di.DatabaseModule
 import com.example.skuska2.models.Engine
 import com.example.skuska2.models.Person
 import com.example.skuska2.models.Question
@@ -16,18 +17,12 @@ class MyApp: Application() {
         lateinit var realm: Realm
     }
 
+
+    //here use DatabaseModule
+
     override fun onCreate() {
         super.onCreate()
-        realm = Realm.open(
-            configuration = RealmConfiguration.create(
-                schema = setOf(
-                    Engine::class,
-                    Person::class,
-                    Question::class,
-                    Quiz::class,
-                    Score::class,
-                )
-            )
-        )
+        realm = DatabaseModule.provideRealm()
+        DatabaseModule.provideMongoRepository(realm)
     }
 }

@@ -52,7 +52,6 @@ fun WelcomeScreen(navController: NavController, modifier: Modifier){
         Image(
             modifier = Modifier
                 .size(150.dp),
-                //.padding(0.dp, 30.dp, 0.dp, 30.dp),
             painter = painterResource(R.drawable.propeller),
             contentDescription = "Propeller")
         Text(

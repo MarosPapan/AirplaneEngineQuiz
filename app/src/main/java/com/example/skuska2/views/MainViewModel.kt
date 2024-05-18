@@ -2,18 +2,17 @@ package com.example.skuska2.views
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.skuska2.MyApp
 import com.example.skuska2.R
+import com.example.skuska2.domain.di.DatabaseModule
 import com.example.skuska2.models.Engine
 import com.example.skuska2.models.Question
 import com.example.skuska2.models.Quiz
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.realmListOf
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 
 class MainViewModel: ViewModel() {
-    private val realm = MyApp.realm
+    private val realm = DatabaseModule.provideRealm()
 
 //    init {
 //        createSampleEntries()

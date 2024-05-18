@@ -3,8 +3,6 @@ package com.example.skuska2.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,12 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.skuska2.R
 import com.example.skuska2.Screen
 import com.example.skuska2.models.Engine
-import com.example.skuska2.ui.WelcomeScreen
 import com.example.skuska2.ui.theme.md_theme_light_onPrimaryContainer
-import org.mongodb.kbson.ObjectId
 
 
 @Composable

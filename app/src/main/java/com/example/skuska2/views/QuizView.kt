@@ -7,19 +7,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import androidx.navigation.compose.rememberNavController
-import com.example.skuska2.MyApp
 import com.example.skuska2.R
-import com.example.skuska2.domain.model.Constants
-import com.example.skuska2.domain.model.Question
+import com.example.skuska2.domain.di.DatabaseModule
 import com.example.skuska2.models.Engine
 import com.example.skuska2.models.Quiz
-import com.example.skuska2.ui.results.ResultScreen
-import io.realm.kotlin.ext.query
 
 class QuizView: ViewModel() {
 
-    private val realm = MyApp.realm
+    private val realm = DatabaseModule.provideRealm()
+    private val repository = DatabaseModule.provideMongoRepository(realm)
 
     private var numberOfQuestion by mutableIntStateOf(0)
     private var clickedOption by mutableStateOf(false)
@@ -41,27 +37,16 @@ class QuizView: ViewModel() {
     }
 
     fun getEngineByName(name: String): Engine?{
-        var engine: Engine?
-        engine = realm.query<Engine>(query = "typeOfEngine CONTAINS[c] $0", name).first().find()
-        println(engine?.typeOfEngine)
-        return  engine
+        return repository.getEngineByName(name)
     }
 
     fun getImageByName(name: String): Int{
         return getEngineByName(name)?.image?.toInt() ?: R.drawable.propeller
     }
 
+    //in this function use getEngineById
     fun getQuestionsByName(typeOfEngine: String): Quiz {
-        var engine = getEngineByName(typeOfEngine)
-        var quiz: Quiz?
-        quiz = realm.query<Quiz>(query = "quizOfEngine.id == $0", engine?.id).first().find()
-        if (quiz != null) {
-            println("Up until now working: " + typeOfEngine + quiz.questions.get(1).question)
-            return quiz
-        }else{
-            print("Went to else")
-            return Quiz()
-        }
+        return repository.getQuestionsByEngine(typeOfEngine)
     }
 
     fun getSizeOfQuiz(typeOfEngine: String): Int {

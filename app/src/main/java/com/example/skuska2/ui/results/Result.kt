@@ -15,13 +15,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,12 +32,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.skuska2.R
 import com.example.skuska2.Screen
 import com.example.skuska2.domain.model.Constants
-import com.example.skuska2.domain.model.setData
 import com.example.skuska2.ui.components.AlertDialog
 import com.example.skuska2.ui.components.TopBarQuiz
 import com.example.skuska2.ui.theme.md_theme_light_onPrimaryContainer
 import com.example.skuska2.ui.theme.md_theme_light_primary
-import com.example.skuska2.views.DetailView
 import com.example.skuska2.views.ResultView
 
 @Composable

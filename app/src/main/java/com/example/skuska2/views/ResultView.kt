@@ -4,21 +4,16 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.skuska2.MyApp
 import com.example.skuska2.R
-import com.example.skuska2.domain.model.Constants
+import com.example.skuska2.domain.di.DatabaseModule
 import com.example.skuska2.models.Engine
 import com.example.skuska2.models.Person
 import com.example.skuska2.models.Quiz
-import com.example.skuska2.models.Score
-import io.realm.kotlin.UpdatePolicy
-import io.realm.kotlin.ext.query
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
 class ResultView: ViewModel() {
-    private val realm = MyApp.realm
+    private val realm = DatabaseModule.provideRealm()
+    private val repository = DatabaseModule.provideMongoRepository(realm)
     var score2 = mutableStateOf(0)
     var typeOfEngine = mutableStateOf("")
     var name = mutableStateOf("")
@@ -26,53 +21,19 @@ class ResultView: ViewModel() {
     var failRecord = mutableStateOf(false)
 
     fun getEngineByName(name: String): Engine?{
-        var engine: Engine?
-        engine = realm.query<Engine>(query = "typeOfEngine == $0", name).first().find()
-        println(engine?.typeOfEngine)
-        return  engine
+        return repository.getEngineByName(name)
     }
 
     fun getPerson(name: String): Person?{
-        var person: Person?
-        person = realm.query<Person>(query = "name == $0", name).first().find()
-        println(person?.name)
-        return  person
+        return repository.getPersonByName(name)
     }
 
     fun getQuizByEngine(name: String): Quiz? {
-        var quiz: Quiz?
-        quiz = realm.query<Quiz>(query = "quizOfEngine.typeOfEngine == $0", name).first().find()
-        println(quiz?.quizOfEngine?.typeOfEngine.toString())
-        return quiz
+        return repository.getQuizByEngine(name)
     }
 
     fun getImageByName(name: String): Int{
         return getEngineByName(name)?.image?.toInt() ?: R.drawable.propeller
-    }
-
-    suspend fun insertScore(score: Score) {
-        realm.write { copyToRealm(score) }
-    }
-
-    fun addScore() {
-        val personToWrite: Person? = getPerson(name.value)
-        val quizToWrite: Quiz? = getQuizByEngine(typeOfEngine.value)
-        if (personToWrite != null && quizToWrite != null) {
-            viewModelScope.launch(Dispatchers.IO) {
-            }
-            viewModelScope.launch(Dispatchers.IO) {
-                insertScore(score = Score().apply {
-                    score = score2.value
-                    person = personToWrite
-                    quiz = quizToWrite
-                })
-                onOpenRecordedDialog()
-            }
-        }else {
-            println(personToWrite?.name.toString())
-            println(quizToWrite?.quizOfEngine?.typeOfEngine.toString())
-            onOpenFailRecordDialog()
-        }
     }
 
     fun addScore1() {
@@ -80,14 +41,7 @@ class ResultView: ViewModel() {
         val quizToWrite: Quiz? = getQuizByEngine(typeOfEngine.value)
         if (personToWrite != null && quizToWrite != null) {
             viewModelScope.launch {
-                realm.write{
-                    val score = Score().apply {
-                        score = score2.value
-                    }
-                    score.person = findLatest(personToWrite)
-                    score.quiz = findLatest(quizToWrite)
-                    copyToRealm(score, updatePolicy = UpdatePolicy.ALL)
-                }
+                repository.insertScore(personToWrite, quizToWrite, score2.value)
                 onOpenRecordedDialog()
             }
         } else {
