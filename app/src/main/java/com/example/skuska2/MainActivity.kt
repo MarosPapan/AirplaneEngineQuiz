@@ -38,8 +38,6 @@ class MainActivity : ComponentActivity() {
             //viewModel.createSampleEntries()
             Skuska2Theme {
                 // A surface container using the 'background' color from the theme
-                //CategoriesScreen()
-               //setData.SetEnginesData()
                 Navigation()
             }
         }

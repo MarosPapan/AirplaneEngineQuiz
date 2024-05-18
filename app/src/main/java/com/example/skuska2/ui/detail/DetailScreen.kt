@@ -46,6 +46,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.skuska2.R
 import com.example.skuska2.Screen
 import com.example.skuska2.domain.model.setData
+import com.example.skuska2.ui.components.TopBarQuiz
 import com.example.skuska2.ui.theme.md_theme_light_onPrimaryContainer
 import com.example.skuska2.ui.theme.md_theme_light_primary
 import com.example.skuska2.views.CategoriesView
@@ -59,7 +60,7 @@ fun DetailScreen(navController: NavController, typeOfEngine: String, modifier: M
     var engine = viewModel.getEngineByName(typeOfEngine)
 
     Scaffold(
-        topBar ={ DetailScreenTopBar() }
+        topBar ={ TopBarQuiz() }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -181,30 +182,10 @@ fun DetailScreen(navController: NavController, typeOfEngine: String, modifier: M
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable private fun DetailScreenTopBar() {
-    CenterAlignedTopAppBar(
-        modifier = Modifier
-            .fillMaxWidth()
-        ,
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = md_theme_light_onPrimaryContainer
-        ),
-        title = {
-            Text(
-                modifier = Modifier,
-                text = "Airplane Engines",
-                style = MaterialTheme.typography.headlineLarge,
-                color = Color.White
-            )
 
-        }
-    )
-}
 
 @Preview
 @Composable
 fun DetailScreenPreview(){
-    setData.SetEnginesData()
     DetailScreen(navController = rememberNavController(), "TurboProp")
 }

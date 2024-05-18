@@ -1,4 +1,4 @@
-package com.example.skuska2.ui.records
+package com.example.skuska2.ui.usersScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -40,18 +40,17 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.skuska2.Screen
 import com.example.skuska2.domain.model.Constants
-import com.example.skuska2.models.Score
+import com.example.skuska2.ui.components.AlertDialog
 import com.example.skuska2.ui.components.TopBarQuiz
+import com.example.skuska2.ui.records.RecordsScreen
 import com.example.skuska2.ui.theme.md_theme_light_onPrimaryContainer
 import com.example.skuska2.ui.theme.md_theme_light_primary
-import com.example.skuska2.views.RecordsView
-
+import com.example.skuska2.views.UsersView
 
 @Composable
-fun RecordsScreen(navController: NavController) {
-    val viewModel = viewModel<RecordsView>()
-
-
+fun UsersScreen(navController: NavController, signingIn: Boolean) {
+    val viewModel = viewModel<UsersView>()
+    viewModel.setSigningIn(signingIn)
     Scaffold(
         topBar ={ TopBarQuiz() }
     ) { paddingValues ->
@@ -71,20 +70,35 @@ fun RecordsScreen(navController: NavController) {
                     horizontalArrangement = Arrangement.Center,
                 ) {
                     Text(
-                        text = "Records of taken quizes",
+                        text = "All Users",
                         style = MaterialTheme.typography.headlineLarge,
                         modifier = Modifier.padding(start = 12.dp),
                         color = Color.Black,
                     )
                 }
 
-                IconButton(
-                    onClick = { navController.navigate(Screen.CategoriesScreen.route+"/"+Constants.getUsername()) },
-                ) {
-                    Icon(
-                        imageVector = Icons.Sharp.ArrowBack,
-                        contentDescription = "Add category",
-                    )
+                if (signingIn){
+                    IconButton(
+                        onClick = { navController.navigate(Screen.WelcomeScreen.route) },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Sharp.ArrowBack,
+                            contentDescription = "Arrow back",
+                        )
+                    }
+                }else {
+                    IconButton(
+                        onClick = { navController.navigate(Screen.CategoriesScreen.route+"/"+ Constants.getUsername()) },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Sharp.ArrowBack,
+                            contentDescription = "Arrow back",
+                        )
+                    }
+                }
+
+                if (viewModel.onDeleteDialog.value) {
+                    AlertDialog(onDismiss = {viewModel.onCloseDeleteDialog()}, message = "You are deleting the user you are currently using", buttonText = "Different user")
                 }
 
                 Row(
@@ -100,19 +114,13 @@ fun RecordsScreen(navController: NavController) {
                         singleLine = true
                     )
                     Spacer(modifier = Modifier.height(24.dp))
-                    TextField(
-                        modifier = Modifier.weight(1f),
-                        value = viewModel.score.value,
-                        onValueChange = viewModel::updateScore,
-                        placeholder = { Text(text = "Score") },
-                        singleLine = true
-                    )
-                    Spacer(modifier = Modifier.height(24.dp))
                 }
                 Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(state = rememberScrollState()),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    .fillMaxSize()
+                    .horizontalScroll(state = rememberScrollState())
+                    .padding(start = 19.dp, end = 19.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Spacer(modifier = Modifier.width(6.dp))
                     Button(onClick = { viewModel.filterData() }) {
@@ -122,12 +130,13 @@ fun RecordsScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(24.dp))
             }
             items(items = viewModel.data.value, key = {it.id.toHexString()}) {
-                ScoreView(
+                PersonView(
+                    navController = navController,
                     id = it.id.toHexString(),
-                    name = it.person?.name.toString(),
-                    score = it.score,
-                    typeOfEngine = it.quiz?.quizOfEngine?.typeOfEngine.toString(),
-                    onClickFunction = {viewModel.removeScore(it.id.toHexString())}
+                    name = it.name,
+                    onClickFunction = { viewModel.removeUser(it.id.toHexString(), Constants.getUsername()) },
+                    modifier = Modifier.padding(start = 5.dp, end=5.dp, top=12.dp, bottom = 3.dp),
+                    signingIn = viewModel.getSigningIn()
                 )
             }
         }
@@ -136,40 +145,63 @@ fun RecordsScreen(navController: NavController) {
 
 
 @Composable
-fun ScoreView(id: String, name: String, score: Int, typeOfEngine: String, onClickFunction: () -> Unit){
+fun PersonView(navController: NavController,id: String, name: String, onClickFunction: () -> Unit, modifier: Modifier, signingIn: Boolean){
     Row(
-        modifier = Modifier.padding(bottom = 24.dp)
+        modifier = Modifier
+            .padding(bottom = 24.dp)
+            .fillMaxSize(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = name,
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = score.toString(),
+                text = id,
                 style = MaterialTheme.typography.bodyMedium
             )
-            Text(
-                text = "$typeOfEngine Quiz",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Button(
-                onClick = onClickFunction,
-                shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 20.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = md_theme_light_onPrimaryContainer
-                )
-            ){
-                Text(
-                    text = "Delete score",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = Color.White
-                )
+            if (signingIn) {
+                Button(
+                    onClick = {
+                        navController.navigate(Screen.CategoriesScreen.route+"/"+name)
+                        Constants.setUsername(name)
+                              } ,
+                    shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = md_theme_light_onPrimaryContainer
+                    )
+                ){
+                    Text(
+                        text = "Sign in",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Color.White
+                    )
+                }
+            } else {
+                Button(
+                    onClick = onClickFunction,
+                    shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = md_theme_light_onPrimaryContainer
+                    )
+                ){
+                    Text(
+                        text = "Delete user",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Color.White
+                    )
+                }
             }
+
         }
     }
 }
+
 
 @Preview
 @Composable

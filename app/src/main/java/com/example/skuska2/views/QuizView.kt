@@ -40,17 +40,6 @@ class QuizView: ViewModel() {
         return numberOfQuestion
     }
 
-//    fun getRightQuestions(id: Int): List<Question>{
-//        var mQuestionList: List<Question> = emptyList()
-//        when(id){
-//            1 -> {mQuestionList = Constants.getTurboPropQuestions()}
-//            2 -> {mQuestionList = Constants.getTurboFunQuestions()}
-//            3 -> {mQuestionList = Constants.getTurboJetQuestions()}
-//            4 -> {mQuestionList = Constants.getTurboshaftQuestions()}
-//        }
-//        return mQuestionList
-//    }
-
     fun getEngineByName(name: String): Engine?{
         var engine: Engine?
         engine = realm.query<Engine>(query = "typeOfEngine CONTAINS[c] $0", name).first().find()

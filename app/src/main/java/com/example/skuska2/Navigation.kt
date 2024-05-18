@@ -14,7 +14,9 @@ import com.example.skuska2.ui.WelcomeScreen
 import com.example.skuska2.ui.categories.CategoriesScreen
 import com.example.skuska2.ui.detail.DetailScreen
 import com.example.skuska2.ui.quiz.QuizScreen
+import com.example.skuska2.ui.records.RecordsScreen
 import com.example.skuska2.ui.results.ResultScreen
+import com.example.skuska2.ui.usersScreen.UsersScreen
 import com.example.skuska2.views.WelcomeView
 import org.mongodb.kbson.BsonObjectId
 import org.mongodb.kbson.ObjectId
@@ -84,6 +86,20 @@ fun Navigation(){
             ResultScreen(navController = navController, typeOfEngine = typeOfEngine, score = score.toInt(), numberofQuestions = numberOfQuestions.toInt())
         }
 
+        composable(route = Screen.RecordsScreen.route) {
+            RecordsScreen(navController = navController)
+        }
+
+        composable(route = Screen.UsersScreen.route + "/{signingIn}",
+            arguments = listOf(
+                navArgument("signingIn"){
+                    type = NavType.BoolType
+                }
+            )
+            ) {entry ->
+            val signingIn = entry.arguments?.getBoolean("signingIn").toString()
+            UsersScreen(navController = navController, signingIn = signingIn.toBoolean())
+        }
     }
 }
 

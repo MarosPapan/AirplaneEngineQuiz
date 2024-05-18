@@ -31,7 +31,7 @@ class DetailView: ViewModel() {
 
     fun getEngineByName(name: String): Engine?{
         var engine: Engine?
-        engine = realm.query<Engine>(query = "typeOfEngine CONTAINS[c] $0", name).first().find()
+        engine = realm.query<Engine>(query = "typeOfEngine == $0", name).first().find()
         println(engine?.typeOfEngine)
         return  engine
 

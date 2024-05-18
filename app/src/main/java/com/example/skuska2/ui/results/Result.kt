@@ -36,6 +36,8 @@ import com.example.skuska2.R
 import com.example.skuska2.Screen
 import com.example.skuska2.domain.model.Constants
 import com.example.skuska2.domain.model.setData
+import com.example.skuska2.ui.components.AlertDialog
+import com.example.skuska2.ui.components.TopBarQuiz
 import com.example.skuska2.ui.theme.md_theme_light_onPrimaryContainer
 import com.example.skuska2.ui.theme.md_theme_light_primary
 import com.example.skuska2.views.DetailView
@@ -44,8 +46,13 @@ import com.example.skuska2.views.ResultView
 @Composable
 fun ResultScreen(navController: NavController, typeOfEngine: String, score: Int, numberofQuestions: Int, modifier: Modifier = Modifier){
     val viewModel = viewModel<ResultView>()
+
+    viewModel.setName1(Constants.getUsername())
+    viewModel.setScore1(score)
+    viewModel.setTypeOfEngine1(typeOfEngine)
+
     Scaffold(
-        topBar ={ DetailScreenTopBar() }
+        topBar ={ TopBarQuiz() }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -66,18 +73,24 @@ fun ResultScreen(navController: NavController, typeOfEngine: String, score: Int,
 
                     ) {
                         Image(
-                            painter = painterResource(id = viewModel.getImageByName(typeOfEngine)),
-                            contentDescription = typeOfEngine,
+                            painter = painterResource(id = viewModel.getImageByName(viewModel.getTypeOfEngine1())),
+                            contentDescription = viewModel.getTypeOfEngine1(),
                             modifier = Modifier
                                 .size(120.dp)
                                 .padding(10.dp)
+                        )
+                        Text(
+                            modifier = Modifier.padding(bottom = 10.dp),
+                            text = viewModel.getName1() + " " + viewModel.getTypeOfEngine1() + " " + viewModel.getScore1(),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White
                         )
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
                                 modifier = Modifier.padding(0.dp),
-                                text = typeOfEngine,
+                                text = viewModel.getTypeOfEngine1(),
                                 style = MaterialTheme.typography.headlineLarge,
                                 color = Color.White,
                             )
@@ -116,6 +129,15 @@ fun ResultScreen(navController: NavController, typeOfEngine: String, score: Int,
                         horizontalAlignment = Alignment.CenterHorizontally
 
                     ) {
+
+                        if (viewModel.onRecordResult.value) {
+                            AlertDialog(onDismiss = {viewModel.onDismissRecordedDialog()}, message = "Quiz has been saved", buttonText = "Ok")
+                        }
+
+                        if (viewModel.failRecord.value) {
+                            AlertDialog(onDismiss = {viewModel.onDismissFailRecordDialog()}, message = "Failed to save quiz", buttonText = "Ok")
+                        }
+
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
@@ -129,7 +151,7 @@ fun ResultScreen(navController: NavController, typeOfEngine: String, score: Int,
                                 )
                             Text(
                                 modifier = Modifier.padding(start = 10.dp, top = 0.dp, bottom = 10.dp, end = 10.dp),
-                                text = "$score/$numberofQuestions",
+                                text = "${viewModel.getScore1()}/$numberofQuestions",
                                 style = MaterialTheme.typography.headlineLarge,
                                 color = Color.White
                             )
@@ -177,6 +199,21 @@ fun ResultScreen(navController: NavController, typeOfEngine: String, score: Int,
                     }
 
                     Button(
+                        onClick = { viewModel.addScore1() },
+                        shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 20.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = md_theme_light_onPrimaryContainer
+                        )
+                    )
+                    {
+                        Text(
+                            text = "Record the result of quiz",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.White
+                        )
+                    }
+
+                    Button(
                         onClick = { navController.navigate(Screen.CategoriesScreen.route + "/" + Constants.getUsername()) },
                         shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 20.dp),
                         colors = ButtonDefaults.buttonColors(
@@ -198,31 +235,8 @@ fun ResultScreen(navController: NavController, typeOfEngine: String, score: Int,
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun DetailScreenTopBar() {
-    CenterAlignedTopAppBar(
-        modifier = Modifier
-            .fillMaxWidth()
-        ,
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = md_theme_light_onPrimaryContainer
-        ),
-        title = {
-            Text(
-                modifier = Modifier,
-                text = "Airplane Engines",
-                style = MaterialTheme.typography.headlineLarge,
-                color = Color.White
-            )
-
-        }
-    )
-}
-
 @Preview
 @Composable
 fun ResultScreenPreview(){
-    setData.SetEnginesData()
     ResultScreen(navController = rememberNavController(), "TurboProp", score = 3, numberofQuestions = 5)
 }

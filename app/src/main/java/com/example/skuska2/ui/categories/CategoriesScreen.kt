@@ -2,6 +2,7 @@ package com.example.skuska2.ui.categories
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,9 +13,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.AccountCircle
 import androidx.compose.material.icons.sharp.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -43,6 +48,7 @@ import com.example.skuska2.models.Engine
 import com.example.skuska2.ui.components.CategoryCard
 import com.example.skuska2.ui.theme.md_theme_light_onPrimaryContainer
 import com.example.skuska2.ui.theme.md_theme_light_primary
+import com.example.skuska2.ui.components.TopBarQuiz
 import com.example.skuska2.views.CategoriesView
 
 @Composable
@@ -50,7 +56,7 @@ fun CategoriesScreen(navController: NavController, name: String) {
     val viewModel = viewModel<CategoriesView>()
     val engineList by viewModel.engineList1.collectAsState()
     Scaffold(
-        topBar = {CategoriesScreenTopBar()}
+        topBar = { TopBarQuiz() }
     ) {paddingValues ->
         LazyColumn (
             modifier = Modifier
@@ -88,7 +94,7 @@ fun CategoriesScreen(navController: NavController, name: String) {
                             )
                         }
                         Text(
-                            text = name,
+                            text = viewModel.getPerson(name)?.name.toString(),
                             modifier = Modifier.padding(10.dp),
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Black
@@ -97,15 +103,48 @@ fun CategoriesScreen(navController: NavController, name: String) {
 
                 }
             }
-
             item{
-                IconButton(
-                    onClick = { navController.navigate(Screen.WelcomeScreen.route) },
-                ) {
-                    Icon(
-                        imageVector = Icons.Sharp.ArrowBack,
-                        contentDescription = "Add category",
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(state = rememberScrollState()),
+                    horizontalArrangement = Arrangement.SpaceBetween) {
+                    IconButton(
+                        onClick = { navController.navigate(Screen.WelcomeScreen.route) },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Sharp.ArrowBack,
+                            contentDescription = "Add category",
+                        )
+                    }
+                    Button(
+                        onClick = { navController.navigate(Screen.RecordsScreen.route) },
+                        shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 20.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = md_theme_light_onPrimaryContainer
+                        )
                     )
+                    {
+                        Text(
+                            text = "Records",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.White
+                        )
+                    }
+
+                    Button(
+                        onClick = { navController.navigate(Screen.UsersScreen.route+"/"+false) },
+                        shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 20.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = md_theme_light_onPrimaryContainer
+                        )
+                    )
+                    {
+                        Text(
+                            text = "Show all users",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.White
+                        )
+                    }
                 }
             }
 
@@ -114,27 +153,6 @@ fun CategoriesScreen(navController: NavController, name: String) {
             }
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable private fun CategoriesScreenTopBar() {
-    CenterAlignedTopAppBar(
-        modifier = Modifier
-            .fillMaxWidth()
-            ,
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = md_theme_light_onPrimaryContainer
-        ),
-        title = {
-            Text(
-                modifier = Modifier,
-                text = "Airplane Engines",
-                style = MaterialTheme.typography.headlineLarge,
-                color = Color.White
-            )
-
-        }
-    )
 }
 
 @Preview

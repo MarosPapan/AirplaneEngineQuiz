@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.skuska2.MyApp
 import com.example.skuska2.domain.model.Engine
 import com.example.skuska2.domain.model.setData
+import com.example.skuska2.models.Person
+import com.example.skuska2.models.Score
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -28,6 +30,10 @@ class CategoriesView: ViewModel() {
             emptyList()
         )
 
+    fun getPerson(name: String): Person?{
+        return realm.query<Person>(query = "name == $0", name).first().find()
+    }
+
     fun deleteCategory(category: com.example.skuska2.models.Engine) {
         viewModelScope.launch {
             realm.write {
@@ -37,37 +43,6 @@ class CategoriesView: ViewModel() {
             }
         }
     }
-
-//    fun initializeEngineList() {
-//        engineList1.value.toList()
-//        if(engineList.isEmpty()){
-//            engineList = engineList1.value.toMutableList()
-//        }
-//    }
-
-//    fun addEngineToList(typeOfEngine: String, description: String, image: Int) {
-//        engineList.add(
-//            Engine(
-//               engineList.size+1,
-//                typeOfEngine,
-//                description,
-//                image
-//            )
-//        )
-//    }
-    //var engineList: List<Engine> = setData.SetEnginesData()
-//    fun getOneEngine(id: Int): Engine {
-//        for (engine in engineList){
-//            if (engine.id == id) {
-//                return engine;
-//            }
-//        }
-//        throw NoSuchElementException("Engine with ID $id not found")
-//    }
-
-//    fun getEngineList1():List<Engine> {
-//        return engineList
-//    }
 }
 
 

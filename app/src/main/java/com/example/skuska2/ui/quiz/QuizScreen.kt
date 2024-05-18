@@ -252,7 +252,5 @@ fun QuizScreen(navController: NavController, typeOfEngine: String) {
 @Preview
 @Composable
 fun QuizScreenPreview(){
-    setData.SetEnginesData()
-    Constants.getTurboJetQuestions()
     QuizScreen(navController = rememberNavController(), "TurboProp")
 }

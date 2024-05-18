@@ -9,6 +9,6 @@ import org.mongodb.kbson.ObjectId
 class Score: RealmObject {
     @PrimaryKey var id: ObjectId = ObjectId()
     var score: Int = 0
-    var engine: Engine? = null
     var person: Person? = null
+    var quiz: Quiz? = null
 }

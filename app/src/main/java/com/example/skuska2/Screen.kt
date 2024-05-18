@@ -15,4 +15,6 @@ sealed class Screen(val route: String) {
             return "result_screen/$typeOfEngine/$score/$numbQuest"
         }
     }
+    object RecordsScreen: Screen("records_screen")
+    object UsersScreen: Screen("users_screen")
 }

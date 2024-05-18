@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +33,7 @@ import com.example.skuska2.R
 import com.example.skuska2.Screen
 import com.example.skuska2.domain.model.Constants
 import com.example.skuska2.ui.components.AlertDialog
+import com.example.skuska2.ui.theme.md_theme_light_onPrimaryContainer
 import com.example.skuska2.ui.theme.md_theme_light_primary
 import com.example.skuska2.views.WelcomeView
 
@@ -63,6 +66,10 @@ fun WelcomeScreen(navController: NavController, modifier: Modifier){
             AlertDialog(onDismiss = {viewModel.onDismissAlertDialog()}, message = "Text field is empty", buttonText = "Fill the name")
         }
 
+        if (viewModel.nameAlreadyExistDialog) {
+            AlertDialog(onDismiss = {viewModel.onDismisNameExist()}, message = "Name already exists. Choose different name", buttonText = "Different name")
+        }
+
         TextField(
             value = viewModel.text,
             onValueChange = viewModel::setValue,
@@ -81,8 +88,13 @@ fun WelcomeScreen(navController: NavController, modifier: Modifier){
             if(viewModel.text.isEmpty()){
                 viewModel.onOpenAlertDialog()
             } else {
-                navController.navigate(Screen.CategoriesScreen.route+"/"+viewModel.text)
-                Constants.setUsername(viewModel.text)
+                if (!viewModel.nameAlreadyExist(viewModel.text)){
+                    viewModel.addPerson()
+                    navController.navigate(Screen.CategoriesScreen.route+"/"+viewModel.text)
+                    Constants.setUsername(viewModel.text)
+                }else {
+                    viewModel.nameAlreadyExist(viewModel.text)
+                }
             }
 
         },
@@ -95,6 +107,21 @@ fun WelcomeScreen(navController: NavController, modifier: Modifier){
                 modifier = Modifier.size(50.dp)
             )
         }
+
+        Button(
+            onClick = { navController.navigate(Screen.UsersScreen.route+"/"+true) },
+            shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 20.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = md_theme_light_onPrimaryContainer
+            )
+            ) {
+            Text(
+                text = "Sign in with existing user",
+                style = MaterialTheme.typography.labelMedium,
+                color = Color.White
+            )
+        }
+
         Image(
             painter = painterResource(R.drawable.airplane),
             contentDescription = "Airplane",
