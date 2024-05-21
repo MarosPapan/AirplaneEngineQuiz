@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -78,7 +79,7 @@ fun RecordsScreen(navController: NavController) {
                 ) {
                     Icon(
                         imageVector = Icons.Sharp.ArrowBack,
-                        contentDescription = "Add category",
+                        contentDescription = "Arrow back",
                     )
                 }
 
@@ -95,19 +96,21 @@ fun RecordsScreen(navController: NavController) {
                         singleLine = true
                     )
                     Spacer(modifier = Modifier.height(24.dp))
-                    TextField(
-                        modifier = Modifier.weight(1f),
-                        value = viewModel.score.value,
-                        onValueChange = viewModel::updateScore,
-                        placeholder = { Text(text = "Score") },
-                        singleLine = true
-                    )
+//                    TextField(
+//                        modifier = Modifier.weight(1f),
+//                        value = viewModel.score.value,
+//                        onValueChange = viewModel::updateScore,
+//                        placeholder = { Text(text = "Score") },
+//                        singleLine = true
+//                    )
                     Spacer(modifier = Modifier.height(24.dp))
                 }
                 Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(state = rememberScrollState()),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    .fillMaxSize()
+                    .horizontalScroll(state = rememberScrollState())
+                    .padding(start = 19.dp, end = 19.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Spacer(modifier = Modifier.width(6.dp))
                     Button(onClick = { viewModel.filterData() }) {
@@ -133,7 +136,11 @@ fun RecordsScreen(navController: NavController) {
 @Composable
 fun ScoreView(id: String, name: String, score: Int, typeOfEngine: String, onClickFunction: () -> Unit){
     Row(
-        modifier = Modifier.padding(bottom = 24.dp)
+        modifier = Modifier
+            .padding(bottom = 24.dp)
+            .fillMaxSize(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
         ) {
