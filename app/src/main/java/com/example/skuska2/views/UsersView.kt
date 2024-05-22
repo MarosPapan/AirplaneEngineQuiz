@@ -14,6 +14,7 @@ import org.mongodb.kbson.ObjectId
 class UsersView: ViewModel() {
     private val realm = DatabaseModule.provideRealm()
     private val repository = DatabaseModule.provideMongoRepository(realm)
+
     var name = mutableStateOf("")
     var filtered = mutableStateOf(false)
     var data = mutableStateOf(emptyList<Person>())

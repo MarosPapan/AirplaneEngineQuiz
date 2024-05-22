@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -96,13 +97,6 @@ fun RecordsScreen(navController: NavController) {
                         singleLine = true
                     )
                     Spacer(modifier = Modifier.height(24.dp))
-//                    TextField(
-//                        modifier = Modifier.weight(1f),
-//                        value = viewModel.score.value,
-//                        onValueChange = viewModel::updateScore,
-//                        placeholder = { Text(text = "Score") },
-//                        singleLine = true
-//                    )
                     Spacer(modifier = Modifier.height(24.dp))
                 }
                 Row(modifier = Modifier
@@ -135,42 +129,58 @@ fun RecordsScreen(navController: NavController) {
 
 @Composable
 fun ScoreView(id: String, name: String, score: Int, typeOfEngine: String, onClickFunction: () -> Unit){
-    Row(
+    ElevatedCard(
         modifier = Modifier
-            .padding(bottom = 24.dp)
-            .fillMaxSize(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(top = 15.dp, start = 15.dp, end = 15.dp)
     ) {
-        Column(
+        Row(
+            modifier = Modifier
+                //.padding(bottom = 24.dp)
+                .fillMaxSize()
+                .background(md_theme_light_onPrimaryContainer),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = name,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = score.toString(),
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = "$typeOfEngine Quiz",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Button(
-                onClick = onClickFunction,
-                shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 20.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = md_theme_light_onPrimaryContainer
-                )
-            ){
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
-                    text = "Delete score",
-                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(top = 12.dp, bottom = 12.dp),
+                    text = "User: " + name,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = Color.White
                 )
+                Text(
+                    modifier = Modifier.padding(bottom = 12.dp),
+                    text = "Score: " + score.toString() + " / 5",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White
+                )
+                Text(
+                    modifier = Modifier.padding(bottom = 12.dp),
+                    text = "$typeOfEngine Quiz",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White
+                )
+                Button(
+                    modifier = Modifier.padding(bottom = 12.dp),
+                    onClick = onClickFunction,
+                    shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = md_theme_light_primary
+                    )
+                ){
+                    Text(
+                        text = "Delete score",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Color.White
+                    )
+                }
             }
         }
     }
+
 }
 
 @Preview

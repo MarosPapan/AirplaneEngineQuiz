@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -142,59 +143,69 @@ fun UsersScreen(navController: NavController, signingIn: Boolean) {
 
 
 @Composable
-fun PersonView(navController: NavController,id: String, name: String, onClickFunction: () -> Unit, modifier: Modifier, signingIn: Boolean){
-    Row(
+fun PersonView(navController: NavController,id: String, name: String, onClickFunction: () -> Unit, modifier: Modifier, signingIn: Boolean)
+{
+    ElevatedCard(
         modifier = Modifier
-            .padding(bottom = 24.dp)
-            .fillMaxSize(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(top = 15.dp, start = 15.dp, end = 15.dp)
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(md_theme_light_onPrimaryContainer),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = name,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = id,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            if (signingIn) {
-                Button(
-                    onClick = {
-                        navController.navigate(Screen.CategoriesScreen.route+"/"+name)
-                        Constants.setUsername(name)
-                              } ,
-                    shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 20.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = md_theme_light_onPrimaryContainer
-                    )
-                ){
-                    Text(
-                        text = "Sign in",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = Color.White
-                    )
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier.padding(top = 12.dp, bottom = 12.dp),
+                    text = name,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White
+                )
+                Text(
+                    modifier = Modifier.padding(bottom = 12.dp),
+                    text = id,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White
+                )
+                if (signingIn) {
+                    Button(
+                        onClick = {
+                            navController.navigate(Screen.CategoriesScreen.route+"/"+name)
+                            Constants.setUsername(name)
+                        } ,
+                        shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 20.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = md_theme_light_primary
+                        )
+                    ){
+                        Text(
+                            text = "Sign in",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.White
+                        )
+                    }
+                } else {
+                    Button(
+                        onClick = onClickFunction,
+                        shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 20.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = md_theme_light_primary
+                        )
+                    ){
+                        Text(
+                            text = "Delete user",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.White
+                        )
+                    }
                 }
-            } else {
-                Button(
-                    onClick = onClickFunction,
-                    shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 20.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = md_theme_light_onPrimaryContainer
-                    )
-                ){
-                    Text(
-                        text = "Delete user",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = Color.White
-                    )
-                }
-            }
 
+            }
         }
     }
 }
