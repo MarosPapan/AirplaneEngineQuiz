@@ -213,7 +213,7 @@ fun QuizScreen(navController: NavController, typeOfEngine: String) {
                     }
                 } else if(viewModel.getNumberOfQuestion1() == viewModel.getSizeOfQuiz(typeOfEngine = typeOfEngine)-1) {
                     Button(
-                        onClick = {if(viewModel.getClickedOption1())navController.navigate(route = Screen.ResultScreen.passIdScoreNumbQuest(typeOfEngine = typeOfEngine, score = viewModel.getScore1(), numbQuest = viewModel.getSizeOfQuiz(typeOfEngine)))},
+                        onClick = {if(viewModel.getClickedOption1())navController.navigate(route = Screen.ResultScreen.passIdScoreNumbQuest(typeOfEngine = typeOfEngine, score = viewModel.getScore1(), numbQuest = viewModel.getSizeOfQuiz(typeOfEngine))) else viewModel.onOpenAlertDialog()},
                         modifier = Modifier.padding(15.dp),
                         shape = RoundedCornerShape(topStart = 10.dp, bottomEnd = 10.dp, bottomStart = 10.dp, topEnd = 10.dp),
                         elevation = ButtonDefaults.buttonElevation(
