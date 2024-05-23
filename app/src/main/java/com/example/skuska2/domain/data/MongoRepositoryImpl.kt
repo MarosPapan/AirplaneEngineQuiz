@@ -110,6 +110,7 @@ class MongoRepositoryImpl(val realm: Realm) : MongoRepository {
     }
 
     override fun getScoresByName(name: String): Flow<List<Score>> {
-        return realm.query<Score>(query = "person.name CONTAINS[c] $0", name).asFlow().map { it.list }
+//        return realm.query<Score>(query = "person.name CONTAINS[c] $0", name).asFlow().map { it.list }
+        return realm.query<Score>(query = "person.name == $0", name).asFlow().map { it.list }
     }
 }
