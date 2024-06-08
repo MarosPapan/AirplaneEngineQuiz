@@ -78,7 +78,7 @@ class UsersView: ViewModel() {
                     scores ->
                 for (score in scores){
                     repository.deleteScore(id = score.id)
-                }
+                }   
             }
 
         }

@@ -2,10 +2,7 @@ package com.example.skuska2
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavType
-import androidx.navigation.Navigation
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -17,9 +14,6 @@ import com.example.skuska2.ui.quiz.QuizScreen
 import com.example.skuska2.ui.records.RecordsScreen
 import com.example.skuska2.ui.results.ResultScreen
 import com.example.skuska2.ui.usersScreen.UsersScreen
-import com.example.skuska2.views.WelcomeView
-import org.mongodb.kbson.BsonObjectId
-import org.mongodb.kbson.ObjectId
 
 @Composable
 fun Navigation(){
